@@ -18,7 +18,7 @@ public class Appointment {
 //    - Required for persistence frameworks (e.g., Hibernate) to map the class to a database table.
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 // 1. 'id' field:
