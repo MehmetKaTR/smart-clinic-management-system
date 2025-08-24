@@ -1,8 +1,85 @@
 <!-- index.html -->
-<!-- 
+<!-- 1) Label the File: index.html -->
+<!DOCTYPE html> <!-- 2) Declare Document Type (HTML5) -->
+<html lang="en"> <!-- 3) Start HTML document with language -->
+
+<head> <!-- 4) Head Section (metadata + resources) -->
+    <!-- 5) Character Encoding -->
+    <meta charset="UTF-8" />
+
+    <!-- (optional but recommended) responsive viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- 6) Page Title -->
+    <title>Select Role</title>
+
+    <!-- 7) Favicon -->
+    <link rel="icon" type="image/png" href="./assets/images/logo/logo.png" />
+
+    <!-- 8) Stylesheets -->
+    <link rel="stylesheet" href="./assets/css/index.css" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+
+    <!-- 9) JavaScript files with defer -->
+    <script src="./js/util.js" defer></script>
+    <script src="./js/render.js" defer></script>
+    <script src="./js/components/header.js" defer></script>
+    <script src="./js/components/footer.js" defer></script>
+</head>
+
+<!-- 10) Close head and open body -->
+<body>
+
+<!-- 11) Main Container -->
+<div class="container">
+
+    <!-- 12) Wrapper for structure -->
+    <div class="wrapper">
+
+        <!-- 13) Header Placeholder (filled dynamically by JS) -->
+        <div id="header-placeholder"></div>
+
+        <!-- 14) Main Section -->
+        <main id="main-content" role="main" aria-labelledby="role-heading">
+
+            <!-- 15) Heading for Role Selection -->
+            <h2 id="role-heading">Select Your Role</h2>
+
+            <!-- 16) Buttons for Roles -->
+            <section class="role-selection" aria-label="Role selection">
+                <div class="role-buttons">
+                    <button id="btn-admin" class="btn role-btn" type="button">Admin</button>
+                    <button id="btn-patient" class="btn role-btn" type="button">Patient</button>
+                    <button id="btn-doctor" class="btn role-btn" type="button">Doctor</button>
+                </div>
+            </section>
+        </main>
+
+        <!-- 17) Footer Placeholder (filled dynamically by JS) -->
+        <div id="footer-placeholder"></div>
+
+    </div> <!-- /wrapper -->
+</div> <!-- /container -->
+
+<!-- 18) Modal Structure (overlay + inner container) -->
+<div id="modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true" hidden>
+    <div class="modal" role="document">
+        <button id="modal-close" class="modal-close" type="button" aria-label="Close modal">&times;</button>
+        <div id="modal-content" class="modal-content"><!-- dynamic login form goes here --></div>
+    </div>
+</div>
+
+<!-- 19) Page-specific logic module (modules are deferred by default) -->
+<script type="module" src="./js/services/index.js" defer></script>
+
+</body>
+<!-- 20) Close HTML -->
+</html>
+
+<!--
 
 Step-by-Step Explanation of `index.html`.
-This file allows users to select a role (Admin, Patient, Doctor) 
+This file allows users to select a role (Admin, Patient, Doctor)
 and triggers modal-based login functionality.
 
 1. Label the File
@@ -53,7 +130,7 @@ and triggers modal-based login functionality.
       `<script src="../js/render.js" defer></script>`
       `<script src="../js/components/header.js" defer></script>`
       `<script src="../js/components/footer.js" defer></script>`
-      
+
 10. Close the Head and Open the Body
 
     * Wrap up metadata and begin the visible page content.
