@@ -7,25 +7,30 @@
 
 ### Table: patients
 - id: INT, Primary Key, Auto Increment
-- username: String, Not Null
-- password: String, Not Null
 - name: String, Not Null
-- age: INT (Min=1, Max=200)
-- gender: INT (0:men, 1:women, 2:not defined)
+- email: String, Not Null, Email
+- password: String, Pattern
+- phone: String, NotNull
+- address: String, Not Null
 
 ### Table: doctors
 - id: INT, Primary Key, Auto Increment
-- username: String, Not Null
 - password: String, Not Null
 - name: String, Not Null
-- specialization: String, Not Null
+- email: String, Not Null, Email
+- phone: String, NotNull
+- speciality: String, Not Null
+- availableTimes: String, NotNull
 
 ### Table: appointments
 - id: INT, Primary Key, Auto Increment
 - patient_id: INT, Foreign Key -> patients(id)
 - doctor_id: INT, Foreign Key -> doctors(id)
 - appointment_date: DATETIME, Not Null
-- status: INT (0 = Scheduled, 1 = Completed, 2 = Cancelled)
+- status: INT (0 = Scheduled, 1 = Completed)
+- getEndTime: DATETIME, Not Null
+- getAppointmentDate: DATETIME, Not Null
+- getAppointmentTimeOnly: DATETIME, Not Null
 
 ---
 
@@ -40,12 +45,7 @@
   "appointmentId": 51,
   "medication": "Paracetamol",
   "dosage": "500mg",
-  "doctorNotes": "Take 1 tablet every 6 hours.",
-  "refillCount": 2,
-  "pharmacy": {
-    "name": "Walgreens SF",
-    "location": "Market Street"
-  }
+  "doctorNotes": "Take 1 tablet every 6 hours."
 }
 ```
 
