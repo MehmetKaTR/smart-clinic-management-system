@@ -1,5 +1,88 @@
 <!-- doctorDashboard.html -->
 
+<!-- doctorDashboard.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Doctor Dashboard</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" th:href="@{/assets/images/logo/logo.png}" />
+
+    <!-- CSS Styles -->
+    <link rel="stylesheet" th:href="@{/assets/css/adminDashboard.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/doctorDashboard.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+
+    <!-- JS (defer load) -->
+    <script th:src="@{/js/util.js}" defer></script>
+    <script th:src="@{/js/render.js}" defer></script>
+    <script th:src="@{/js/components/header.js}" defer></script>
+    <script th:src="@{/js/components/footer.js}" defer></script>
+    <script type="module" th:src="@{/js/doctorDashboard.js}" defer></script>
+</head>
+
+<body>
+<div class="container">
+    <div class="wrapper">
+
+        <!-- Header Placeholder -->
+        <div id="header"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Search Bar -->
+            <input type="text" id="searchBar" class="searchBar" placeholder="Search Bar for custom output" />
+
+            <!-- Filters -->
+            <div class="filters">
+                <button id="todayButton">Today's Appointments</button>
+                <label for="datePicker">Choose Date:</label>
+                <input type="date" id="datePicker" name="datePicker" />
+            </div>
+
+            <!-- Patient Table -->
+            <table class="patientTable">
+                <thead>
+                <tr>
+                    <th>Patient ID</th>
+                    <th>Name</th>
+                    <th>Phone No.</th>
+                    <th>Email</th>
+                    <th>Prescription</th>
+                </tr>
+                </thead>
+                <tbody id="patientTableBody">
+                <!-- Dynamic patient rows will be injected here -->
+                </tbody>
+            </table>
+        </main>
+
+        <!-- Footer Placeholder -->
+        <div id="footer"></div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal">
+    <div class="modal-content" id="modal-body"></div>
+    <span class="close" id="modal-close">&times;</span>
+</div>
+
+<script>
+    // Call renderContent() once DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+        renderContent();
+    });
+</script>
+
+</body>
+</html>
+
+
 <!-- 
 Step-by-Step Explanation of `doctorDashboard.html`
 This file defines the Doctor Dashboard interface, allowing doctors to view and manage their patient appointments, search records, and access patient prescriptions.

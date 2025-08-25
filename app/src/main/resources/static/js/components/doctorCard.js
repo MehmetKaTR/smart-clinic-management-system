@@ -1,3 +1,119 @@
+
+// doctorCard.js
+
+// Gerekli fonksiyonları import et
+import { showBookingOverlay } from './loggedPatient.js';
+import { deleteDoctor } from './doctorServices.js';
+import { fetchPatientDetails } from './patientServices.js';
+
+/**
+ * createDoctorCard
+ * @param {Object} doctor - Doktor bilgileri (name, specialization, email, availableTimes)
+ * @returns {HTMLElement} - Doktor kartı DOM elementi
+ */
+export function createDoctorCard(doctor) {
+    const role = localStorage.getItem("userRole"); // Kullanıcı rolü: admin, patient, loggedPatient
+
+    // Ana kart container
+    const card = document.createElement("div");
+    card.className = "doctor-card";
+
+    // Doktor bilgilerini tutacak div
+    const infoDiv = document.createElement("div");
+    infoDiv.className = "doctor-info";
+
+    const nameEl = document.createElement("h3");
+    nameEl.textContent = doctor.name;
+
+    const specEl = document.createElement("p");
+    specEl.textContent = `Specialization: ${doctor.specialization}`;
+
+    const emailEl = document.createElement("p");
+    emailEl.textContent = `Email: ${doctor.email}`;
+
+    const timesEl = document.createElement("p");
+    timesEl.textContent = `Available Times: ${doctor.availableTimes.join(", ")}`;
+
+    infoDiv.append(nameEl, specEl, emailEl, timesEl);
+
+    // Kart üzerinde butonları tutacak container
+    const actionsDiv = document.createElement("div");
+    actionsDiv.className = "doctor-actions";
+
+    // ===== ADMIN ROLÜ =====
+    if (role === "admin") {
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "adminBtn";
+        deleteBtn.textContent = "Delete Doctor";
+
+        deleteBtn.addEventListener("click", async () => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Admin token not found. Please log in again.");
+                return;
+            }
+            try {
+                const result = await deleteDoctor(doctor.id, token);
+                if (result.success) {
+                    alert("Doctor deleted successfully!");
+                    card.remove();
+                } else {
+                    alert("Failed to delete doctor.");
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Error while deleting doctor.");
+            }
+        });
+
+        actionsDiv.appendChild(deleteBtn);
+    }
+
+    // ===== HENÜZ GİRİŞ YAPMAMIŞ HASTA =====
+    if (role === "patient") {
+        const bookBtn = document.createElement("button");
+        bookBtn.className = "patientBtn";
+        bookBtn.textContent = "Book Now";
+
+        bookBtn.addEventListener("click", () => {
+            alert("Please log in to book an appointment.");
+        });
+
+        actionsDiv.appendChild(bookBtn);
+    }
+
+    // ===== GİRİŞ YAPMIŞ HASTA =====
+    if (role === "loggedPatient") {
+        const bookBtn = document.createElement("button");
+        bookBtn.className = "patientBtn";
+        bookBtn.textContent = "Book Now";
+
+        bookBtn.addEventListener("click", async () => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Session expired. Please log in again.");
+                window.location.href = "/pages/patientLogin.html";
+                return;
+            }
+
+            try {
+                const patient = await fetchPatientDetails(token);
+                showBookingOverlay(doctor, patient);
+            } catch (error) {
+                console.error(error);
+                alert("Error fetching patient info.");
+            }
+        });
+
+        actionsDiv.appendChild(bookBtn);
+    }
+
+    // Kartı tamamla
+    card.append(infoDiv, actionsDiv);
+    return card;
+}
+
+
 /*
 Import the overlay function for booking appointments from loggedPatient.js
 

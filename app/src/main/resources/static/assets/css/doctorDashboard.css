@@ -1,4 +1,125 @@
 /* This is the style sheet for the doctorDashboard.html */
+
+/* Table Header (.table-header) */
+.table-header {
+    font-size: 24px;
+    color: #015c5d;
+    margin: 0 0 30px 0; /* bottom 30px, right 0 */
+}
+
+/* Table (scoped to doctor table) */
+.patientTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: sans-serif;
+    margin-top: 20px;
+}
+
+/* Table Head */
+.patientTable thead {
+    background: #33333310; /* very light dark bg */
+    color: #fff;
+}
+
+/* Cells */
+.patientTable th,
+.patientTable td {
+    padding: 12px 16px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Row striping */
+.patientTable tbody tr:nth-child(even) {
+    background: #f9f9f959; /* semi-transparent light grey */
+}
+.patientTable tbody tr:nth-child(odd) {
+    background: #ffffffc0; /* soft white */
+}
+
+/* Row hover */
+.patientTable tbody tr:hover {
+    background: #015c5d39; /* light teal overlay */
+}
+
+/* Prescription Button (.prescription-btn) */
+.prescription-btn {
+    width: 30px;
+    height: 30px;
+    display: inline-grid;
+    place-items: center;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(0,0,0,.08);
+    transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+}
+.prescription-btn:hover {
+    transform: scale(1.1);
+    filter: brightness(1.08);
+    box-shadow: 0 2px 6px rgba(0,0,0,.12);
+}
+.prescription-btn:active {
+    transform: scale(0.95);
+}
+
+/* No Record Message (.noPatientRecord) */
+.noPatientRecord {
+    font-size: 16px;
+    font-style: italic;
+    color: #7a7a7a;
+    text-align: center;
+    margin-top: 16px;
+}
+
+/* Today Button (.today-btn or #todayButton) */
+.today-btn,
+#todayButton {
+    margin-right: 10px;
+    padding: 10px;
+    background: #015c5d;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity .15s ease, transform .15s ease;
+}
+.today-btn:hover,
+#todayButton:hover {
+    opacity: .92;
+}
+.today-btn:active,
+#todayButton:active {
+    transform: scale(0.98);
+}
+
+/* Date Picker (.date-picker or #datePicker) */
+.date-picker,
+#datePicker {
+    margin-left: 10px;
+    margin-top: 13px;
+    height: 30px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #e3e3e3;
+    outline: none;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+.date-picker:focus,
+#datePicker:focus {
+    border-color: #015c5d;
+    box-shadow: 0 0 0 3px rgba(1, 92, 93, 0.12);
+}
+
+/* Optional: table container responsiveness */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+
 /* 
 **Table Header (`.table-header`)**
 

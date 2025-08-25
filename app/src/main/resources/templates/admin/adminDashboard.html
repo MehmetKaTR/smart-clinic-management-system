@@ -1,5 +1,4 @@
 <!-- adminDashboard.html -->
-<!-- adminDashboard.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
@@ -7,10 +6,10 @@
     <meta charset="UTF-8" />
     <title>Admin Dashboard</title>
 
-    <link rel="icon" type="image/png" th:href="@{assets/images/logo/logo.png}" />
+    <link rel="icon" type="image/png" th:href="@{/assets/images/logo/logo.png}" />
 
-    <link rel="stylesheet" th:href="@{assets/css/adminDashboard.css}">
-    <link rel="stylesheet" th:href="@{assets/css/style.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/adminDashboard.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
 
     <script th:src="@{/js/util.js}" defer></script>
     <script th:src="@{/js/render.js}" defer></script>
@@ -58,7 +57,7 @@
 
 <!-- Page-Specific JS -->
 <script type="module" th:src="@{/js/adminDashboard.js}" defer></script>
-<script type="module" th:src="@{/js/doctorCard.js}" defer></script>
+<script type="module" th:src="@{/js/components/doctorCard.js}" defer></script>
 
 <script>
     // Modern approach instead of body onload
