@@ -27,16 +27,19 @@ public class TokenService {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    @Autowired
-    private AdminRepository adminRepository;
+    private final AdminRepository adminRepository;
 
-    @Autowired
-    private PatientRepository patientRepository;
+    private final PatientRepository patientRepository;
 
-    @Autowired
-    private DoctorRepository doctorRepository;
+    private final DoctorRepository doctorRepository;
 
-// 3. **getSigningKey Method**
+    public TokenService(AdminRepository adminRepository, PatientRepository patientRepository, DoctorRepository doctorRepository) {
+        this.adminRepository = adminRepository;
+        this.patientRepository = patientRepository;
+        this.doctorRepository = doctorRepository;
+    }
+
+    // 3. **getSigningKey Method**
 // This method retrieves the HMAC SHA key used to sign JWT tokens.
 // It uses the `jwt.secret` value, which is provided from an external source (like application properties).
 // The `Keys.hmacShaKeyFor()` method converts the secret key string into a valid `SecretKey` for signing and verification of JWTs.
@@ -75,7 +78,7 @@ public class TokenService {
 
     public String extractEmail(String token) {
         try {
-            Jws<Claims> claimsJws = Jwts.parserBuilder()
+            Jws<Claims> claimsJws = Jwts.parser()
                     .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(token);
@@ -102,13 +105,13 @@ public class TokenService {
 
         switch (role.toLowerCase()) {
             case "admin":
-                return adminRepository.findByEmail(email).isPresent();
+                return adminRepository.findByEmail(email) != null;
             case "doctor":
-                return doctorRepository.findByEmail(email).isPresent();
+                return doctorRepository.findByEmail(email) != null;
             case "patient":
-                return patientRepository.findByEmail(email).isPresent();
+                return patientRepository.findByEmail(email) != null;
             default:
-                return false; // Tanınmayan rol
+                return false;
         }
     }
 

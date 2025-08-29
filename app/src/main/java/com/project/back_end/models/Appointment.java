@@ -63,7 +63,7 @@ public class Appointment {
     @NotNull
     @Min(0)
     @Max(1)
-    private Integer status;
+    private int status;
 
 // 5. 'status' field:
 //    - Type: private int
@@ -157,7 +157,7 @@ public class Appointment {
         this.appointmentTime = appointmentTime;
     }
 
-    public Integer getStatus() {
+    public int getStatus() {
         return status;
     }
 
