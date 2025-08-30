@@ -51,7 +51,7 @@ export async function deleteDoctor(id, token) {
     }
 }
 
-export async function saveDoctors(doctor, token) {
+export async function saveDoctor(doctor, token) {
     try{
         const response = await fetch(`${DOCTOR_API}/save/${token}`, {
             method: 'POST',

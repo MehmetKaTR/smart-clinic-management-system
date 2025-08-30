@@ -1,5 +1,8 @@
 package com.project.back_end.services;
 
+import com.project.back_end.models.Admin;
+import com.project.back_end.models.Doctor;
+import com.project.back_end.models.Patient;
 import com.project.back_end.repo.AdminRepository;
 import com.project.back_end.repo.DoctorRepository;
 import com.project.back_end.repo.PatientRepository;
@@ -28,9 +31,7 @@ public class TokenService {
     private String jwtSecret;
 
     private final AdminRepository adminRepository;
-
     private final PatientRepository patientRepository;
-
     private final DoctorRepository doctorRepository;
 
     public TokenService(AdminRepository adminRepository, PatientRepository patientRepository, DoctorRepository doctorRepository) {
@@ -59,15 +60,12 @@ public class TokenService {
 // The method returns the JWT token as a string.
 
     public String generateToken(String email) {
-        long now = System.currentTimeMillis();
-        long expirationTime = 1000L * 60 * 60 * 24 * 7; // 7 gün
-
         return Jwts.builder()
-                .setSubject(email)                 // Token konusu: kullanıcının email'i
-                .setIssuedAt(new Date(now))        // Oluşturulma zamanı
-                .setExpiration(new Date(now + expirationTime)) // 7 gün sonra geçersiz
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256) // Token'ı imzala
-                .compact();                        // String olarak döndür
+                .subject(email)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7))
+                .signWith(getSigningKey()) // clean & modern
+                .compact();
     }
 
 // 5. **extractEmail Method**
@@ -77,16 +75,12 @@ public class TokenService {
 // This method allows the application to retrieve the user's identity (email) from the token for further use.
 
     public String extractEmail(String token) {
-        try {
-            Jws<Claims> claimsJws = Jwts.parser()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token);
-            return claimsJws.getBody().getSubject(); // Token'daki email
-        } catch (JwtException e) {
-            // Token geçersizse null döndür
-            return null;
-        }
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
     }
 
 // 6. **validateToken Method**
@@ -99,19 +93,37 @@ public class TokenService {
 // - The method gracefully handles any errors by returning false if the token is invalid or an exception occurs.
 // This ensures secure access control based on the user's role and their existence in the system.
 
-    public boolean validateToken(String token, String role) {
-        String email = extractEmail(token);
-        if (email == null) return false;
+    public boolean validateToken(String token, String user) {
+        try {
+            String extracted = extractEmail(token);
+            if(user.equals("admin"))
+            {
+                Admin admin =adminRepository.findByUsername(extracted);
+                if(admin!=null)
+                {
+                    return true;
+                }
+            }
+            else if(user.equals("doctor"))
+            {
+                Doctor doctor=doctorRepository.findByEmail(extracted);
+                if(doctor!=null)
+                {
+                    return true;
+                }
+            }
+            else if(user.equals("patient"))
+            {
+                Patient patient=patientRepository.findByEmail(extracted);
+                if(patient!=null)
+                {
+                    return true;
+                }
+            }
 
-        switch (role.toLowerCase()) {
-            case "admin":
-                return adminRepository.findByEmail(email) != null;
-            case "doctor":
-                return doctorRepository.findByEmail(email) != null;
-            case "patient":
-                return patientRepository.findByEmail(email) != null;
-            default:
-                return false;
+            return false;
+        } catch (Exception e) {
+            return false;
         }
     }
 

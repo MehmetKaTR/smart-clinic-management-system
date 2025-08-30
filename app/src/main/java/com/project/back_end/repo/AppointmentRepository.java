@@ -4,6 +4,7 @@ import com.project.back_end.models.Appointment;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -28,6 +29,11 @@ public interface AppointmentRepository  extends JpaRepository<Appointment,Long> 
 //      - Parameters: Long doctorId, LocalDateTime start, LocalDateTime end
 //      - It uses a LEFT JOIN to fetch the doctor’s available times along with the appointments.
 
+    @Query("SELECT a FROM Appointment a " +
+            "LEFT JOIN FETCH a.doctor d " +
+            "LEFT JOIN FETCH a.status av " +
+            "WHERE d.id = :doctorId " +
+            "AND a.appointmentTime BETWEEN :start AND :end")
     public List<Appointment> findByDoctorIdAndAppointmentTimeBetween(Long doctorId, LocalDateTime start, LocalDateTime end);
 
 //    - **findByDoctorIdAndPatient_NameContainingIgnoreCaseAndAppointmentTimeBetween**:
@@ -35,6 +41,15 @@ public interface AppointmentRepository  extends JpaRepository<Appointment,Long> 
 //      - It performs a LEFT JOIN to fetch both the doctor and patient details along with the appointment times.
 //      - Return type: List<Appointment>
 //      - Parameters: Long doctorId, String patientName, LocalDateTime start, LocalDateTime end
+
+    @Query("SELECT a FROM Appointment a " +
+            "LEFT JOIN FETCH a.doctor d " +
+            "LEFT JOIN FETCH a.patient p " +
+            "WHERE d.id = :doctorId " +
+            "AND LOWER(p.name) LIKE LOWER(CONCAT('%', :patientName, '%')) " +
+            "AND a.appointmentTime BETWEEN :start AND :end")
+    public List<Appointment> findByDoctorIdAndPatient_NameContainingIgnoreCaseAndAppointmentTimeBetween(Long doctorId, String patientName, LocalDateTime start, LocalDateTime end);
+
 
     @Modifying
     @Transactional
@@ -60,6 +75,11 @@ public interface AppointmentRepository  extends JpaRepository<Appointment,Long> 
 //      - Return type: List<Appointment>
 //      - Parameters: Long patientId, int status
 
+    @Query("SELECT a FROM Appointment a " +
+            "JOIN a.doctor d " +
+            "JOIN a.patient p " +
+            "WHERE LOWER(d.name) LIKE LOWER(CONCAT('%', :doctorName, '%')) " +
+            "AND p.id = :patientId")
     public List<Appointment> filterByDoctorNameAndPatientId(String doctorName, Long patientId);
 
 //    - **filterByDoctorNameAndPatientId**:
@@ -67,6 +87,11 @@ public interface AppointmentRepository  extends JpaRepository<Appointment,Long> 
 //      - Return type: List<Appointment>
 //      - Parameters: String doctorName, Long patientId
 
+    @Query("SELECT a FROM Appointment a " +
+            "JOIN a.doctor d " +
+            "JOIN a.patient p " +
+            "WHERE LOWER(d.name) LIKE LOWER(CONCAT('%', :doctorName, '%')) " +
+            "AND p.id = :patientId AND a.status = :status")
     public List<Appointment> findByDoctorNameAndPatientIdAndStatus(String doctorName, Long patientId, int status);
 
 //    - **filterByDoctorNameAndPatientIdAndStatus**:

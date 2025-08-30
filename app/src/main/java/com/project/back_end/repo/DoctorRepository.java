@@ -2,6 +2,7 @@ package com.project.back_end.repo;
 
 import com.project.back_end.models.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.print.Doc;
@@ -31,6 +32,8 @@ public interface DoctorRepository extends JpaRepository<Doctor,Long> {
 //      - Return type: List<Doctor>
 //      - Parameters: String name
 
+    @Query("SELECT d FROM Doctor d " +
+            "WHERE LOWER(d.name) LIKE LOWER(CONCAT('%', :doctorName, '%'))")
     public List<Doctor> findByNameLike(String name);
 
 //    - **findByNameContainingIgnoreCaseAndSpecialtyIgnoreCase**:
@@ -39,6 +42,11 @@ public interface DoctorRepository extends JpaRepository<Doctor,Long> {
 //      - Return type: List<Doctor>
 //      - Parameters: String name, String specialty
 
+    /*
+    @Query("SELECT d FROM Doctor d " +
+            "WHERE LOWER(d.name) LIKE LOWER(CONCAT('%', :doctorName, '%')) " +
+            "AND LOWER(d.specialty) LIKE LOWER(CONCAT('%', :speciality, '%')) ")
+     */
     public List<Doctor> findByNameContainingIgnoreCaseAndSpecialtyIgnoreCase(String name, String speciality);
 
 //    - **findBySpecialtyIgnoreCase**:

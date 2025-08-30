@@ -6,10 +6,11 @@ import com.project.back_end.models.Prescription;
 import com.project.back_end.repo.PrescriptionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PrescriptionService {
@@ -24,8 +25,6 @@ public class PrescriptionService {
 //    - It is injected through the constructor, ensuring proper dependency management and enabling testing.
 //    - Instruction: Constructor injection is a good practice, ensuring that all necessary dependencies are available at the time of service initialization.
 
-    private static final Logger logger = LoggerFactory.getLogger(PrescriptionService.class);
-
     private final PrescriptionRepository prescriptionRepository;
 
     public PrescriptionService(PrescriptionRepository prescriptionRepository) {
@@ -39,20 +38,24 @@ public class PrescriptionService {
 //    - If no prescription exists, it saves the new prescription and returns a `201 Created` status with a success message.
 //    - Instruction: Handle errors by providing appropriate status codes and messages, ensuring that multiple prescriptions for the same appointment are not saved.
 
-    public String savePrescription(Prescription prescription) {
-        try {
-            if(prescriptionRepository.findById(prescription.getId()).isPresent()) {
-                logger.warn("Prescription already exists for appointment id {}", prescription.getAppointmentId());
-                return "400 Bad Request";
+    public ResponseEntity<Map<String, Object>> savePrescription(Prescription prescription) {
+        Map<String, Object> map=new HashMap<>();
+        try{
+            List<Prescription> result = prescriptionRepository.findByAppointmentId(prescription.getAppointmentId());
+            if(result.isEmpty())
+            {
+                prescriptionRepository.save(prescription);
+                map.put("message","Prescription saved");
+                return ResponseEntity.status(HttpStatus.CREATED).body(map);
             }
-
-            prescriptionRepository.save(prescription);
-            logger.info("Prescription saved successfully for appointment id {}", prescription.getAppointmentId());
-            return "201 Created";
+            map.put("message","prescription already exists");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(map);
         }
-        catch (Exception e) {
-            logger.error("Error saving prescription for appointment id {}: {}", prescription.getAppointmentId(), e.getMessage(), e);
-            return "500 Internal Server Error";
+        catch(Exception e)
+        {
+            System.out.println("Error: "+e);
+            map.put("message","Internal Server Error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
         }
     }
 
@@ -62,20 +65,18 @@ public class PrescriptionService {
 //    - If there is an error while fetching the prescription, it logs the error and returns a `500 Internal Server Error` status with an error message.
 //    - Instruction: Ensure that this method handles edge cases, such as no prescriptions found for the given appointment, by returning meaningful responses.
 
-    public List<Prescription> getPrescription(Appointment appointment) {
-        List<Prescription> prescriptions = new ArrayList<>();
-        try {
-            prescriptions = prescriptionRepository.findByAppointmentId(appointment.getId());
-            if (prescriptions.isEmpty()) {
-                logger.info("No prescriptions found for appointment id {}", appointment.getId());
-            } else {
-                logger.info("Found {} prescription(s) for appointment id {}", prescriptions.size(), appointment.getId());
-            }
+    public ResponseEntity<Map<String, Object>> getPrescription(Long appointmentId) {
+        Map<String, Object> map = new HashMap<>();
+
+        try{
+            List<Prescription> result = prescriptionRepository.findByAppointmentId(appointmentId);
+            return ResponseEntity.status(HttpStatus.OK).body(map);
         }
-        catch (Exception e) {
-            logger.error("Error fetching prescriptions for appointment id {}: {}", appointment.getId(), e.getMessage(), e);
+        catch(Exception e){
+            System.out.println("Error: "+e);
+            map.put("message","Internal Server Error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
         }
-        return prescriptions;
     }
 
 // 5. **Exception Handling and Error Responses**:
