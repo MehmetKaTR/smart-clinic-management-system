@@ -38,8 +38,8 @@ public class PrescriptionService {
 //    - If no prescription exists, it saves the new prescription and returns a `201 Created` status with a success message.
 //    - Instruction: Handle errors by providing appropriate status codes and messages, ensuring that multiple prescriptions for the same appointment are not saved.
 
-    public ResponseEntity<Map<String, Object>> savePrescription(Prescription prescription) {
-        Map<String, Object> map=new HashMap<>();
+    public ResponseEntity<Map<String, String>> savePrescription(Prescription prescription) {
+        Map<String, String> map=new HashMap<>();
         try{
             List<Prescription> result = prescriptionRepository.findByAppointmentId(prescription.getAppointmentId());
             if(result.isEmpty())

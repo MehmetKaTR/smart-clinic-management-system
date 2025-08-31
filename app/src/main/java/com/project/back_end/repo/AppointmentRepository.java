@@ -100,7 +100,7 @@ public interface AppointmentRepository  extends JpaRepository<Appointment,Long> 
 //      - Parameters: String doctorName, Long patientId, int status
 
     @Modifying
-    @Transactional
+    @Query("UPDATE Appointment a SET a.status = :status WHERE a.id = :id")
     public void updateStatus(int status, Long id);
 
 //    - **updateStatus**:

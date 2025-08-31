@@ -165,13 +165,14 @@ public class DoctorService {
 //    - It first checks if the doctor exists. If not, it returns `-1`; otherwise, it deletes the doctor and their appointments.
 //    - Instruction: Ensure the doctor and their appointments are deleted properly, with error handling for internal issues.
 
-    public int deleteDoctor(Doctor doctor){
+    public int deleteDoctor(Long id){
         try{
-            if(!doctorRepository.findById(doctor.getId()).isPresent())
+            Optional<Doctor> doctor = doctorRepository.findById(id);
+            if(doctor.isPresent())
                 return -1;
 
-            appointmentRepository.deleteAllByDoctorId(doctor.getId());
-            doctorRepository.delete(doctor);
+            appointmentRepository.deleteAllByDoctorId(doctor.get().getId());
+            doctorRepository.delete(doctor.get());
             return 1;
         }
         catch (Exception e){
