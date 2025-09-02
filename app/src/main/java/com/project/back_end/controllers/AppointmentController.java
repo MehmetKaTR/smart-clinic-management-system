@@ -4,6 +4,7 @@ import com.project.back_end.models.Appointment;
 import com.project.back_end.services.AppointmentService;
 import com.project.back_end.services.Services;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +13,8 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController("/appointments")
+@RestController
+@RequestMapping("/appointments")
 public class AppointmentController {
 
 // 1. Set Up the Controller Class:
@@ -42,15 +44,16 @@ public class AppointmentController {
 //    - If the token is invalid or expired, responds with the appropriate message and status code.
 
     @GetMapping("/{date}/{patientName}/{token}")
-    public ResponseEntity<Map<String, Object>> getAppointments(@PathVariable LocalDate date, String patientName, String token) {
+    public ResponseEntity<Map <String,Object>> getAppointments(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, @PathVariable String patientName,@PathVariable String token)
+    {
         Map<String, Object> map = new HashMap<>();
-        ResponseEntity<Map<String, String>> response = services.validateToken(token, "doctor");
-        if(!response.getBody().isEmpty()){
-            map.putAll(response.getBody());
-            return new ResponseEntity<>(map, response.getStatusCode());
+        ResponseEntity<Map<String,String>> tempMap= services.validateToken(token, "doctor");
+        if (!tempMap.getBody().isEmpty()) {
+            map.putAll(tempMap.getBody());
+            return new ResponseEntity<>(map, tempMap.getStatusCode());
         }
-        map = appointmentService.getAppointment(patientName, date, token);
-        return new ResponseEntity<>(map, response.getStatusCode());
+        map=appointmentService.getAppointment(patientName, date, token);
+        return ResponseEntity.status(HttpStatus.OK).body(map);
     }
 
 

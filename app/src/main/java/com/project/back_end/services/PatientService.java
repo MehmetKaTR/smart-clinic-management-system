@@ -66,24 +66,28 @@ public class PatientService {
 //    - This method is marked as `@Transactional` to ensure database consistency during the transaction.
 //    - Instruction: Ensure that appointment data is properly converted into DTOs and the method handles errors gracefully.
 
+    @Transactional
     public ResponseEntity<Map<String, Object>> getPatientAppointment(Long id, String token){
         Map<String, Object> map = new HashMap<>();
-        Appointment appointment = appointmentRepository.findById(id).orElse(null);
+        List<Appointment> appointments = appointmentRepository.findByPatientId(id);
+        List<AppointmentDTO> appointmentDTOS = new ArrayList<>();
 
-        if (appointment == null){
+        if (appointments == null){
             map.put("error", "appointment not found");
             return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
         }
         else{
-            if(appointment.getPatient().getEmail() == tokenService.extractEmail(token))
-            {
-                AppointmentDTO appointmentDTO = mapToDTO(appointment);
-                map.put("appointment", appointmentDTO);
+            try{
+                for(Appointment appointment : appointments){
+                    appointmentDTOS.add(mapToDTO(appointment));
+                }
+
+                map.put("appointments", appointmentDTOS);
                 return new ResponseEntity<>(map, HttpStatus.OK);
             }
-            else{
-                map.put("error", "appointment not found");
-                return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+            catch (Exception e){
+                map.put("error", e.getMessage());
+                return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR   );
             }
         }
     }

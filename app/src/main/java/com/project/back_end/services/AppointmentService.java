@@ -303,6 +303,9 @@ public class AppointmentService {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
 
+        System.out.println("start: " + startOfDay);
+        System.out.println("end: " + endOfDay);
+
         List<Appointment> appointments;
 
         if (pname.equals("null")) {

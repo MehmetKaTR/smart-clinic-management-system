@@ -57,7 +57,7 @@ public class PatientController {
 //    - First checks if the patient already exists using the shared service.
 //    - If validation passes, attempts to create the patient and returns success or error messages based on the outcome.
 
-    @PutMapping
+    @PostMapping
     public ResponseEntity<Map<String, String>> createPatient(@RequestBody Patient patient) {
         Map<String,String> map=new HashMap<>();
         if(services.validatePatient(patient))
@@ -84,7 +84,7 @@ public class PatientController {
 //    - Delegates authentication to the `validatePatientLogin` method in the shared service.
 //    - Returns a response with a token or an error message depending on login success.
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Login login) {
         return services.validatePatientLogin(login);
     }
@@ -97,7 +97,7 @@ public class PatientController {
 
     @GetMapping("/{id}/{token}/{user}")
     public ResponseEntity<Map<String, Object>> getPatientAppointment(@PathVariable Long id, @PathVariable String token, @PathVariable String user) {
-        ResponseEntity<Map<String, String>> tempMap = services.validateToken(token, "patient");
+        ResponseEntity<Map<String, String>> tempMap = services.validateToken(token, user);
         Map<String, Object> map = new HashMap<>();
 
         if(!tempMap.getBody().isEmpty()){

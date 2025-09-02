@@ -68,7 +68,7 @@ public class DoctorController {
     @GetMapping
     public ResponseEntity<Map<String,Object>> getDoctor() {
         Map<String, Object> map = new HashMap<>();
-        map.put("message", doctorService.getDoctors());
+        map.put("doctors", doctorService.getDoctors());
         return ResponseEntity.status(HttpStatus.OK).body(map);
     }
 
@@ -79,9 +79,9 @@ public class DoctorController {
 //    - If the doctor already exists, returns a conflict response; otherwise, adds the doctor and returns a success message.
 
     @PostMapping("/{token}")
-    public  ResponseEntity<Map<String,String>> saveDoctor(@RequestBody Doctor doctor, @PathVariable String token) {
+    public  ResponseEntity<Map<String,String>> saveDoctor(@RequestBody @Valid Doctor doctor, @PathVariable String token) {
         Map<String, String> map = new HashMap<>();
-        ResponseEntity<Map<String,String>> tempMap= services.validateToken(token, "doctor");
+        ResponseEntity<Map<String,String>> tempMap= services.validateToken(token, "admin");
         if (!tempMap.getBody().isEmpty()) {
             return tempMap;
         }
@@ -107,7 +107,7 @@ public class DoctorController {
 //    - Accepts a validated `Login` DTO containing credentials.
 //    - Delegates authentication to the `DoctorService` and returns login status and token information.
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<Map<String,String>> doctorLogin(@RequestBody @Valid Login login) {
         return doctorService.validateDoctor(login);
     }
@@ -149,7 +149,7 @@ public class DoctorController {
     public ResponseEntity<Map<String, String>> deleteDoctor(@PathVariable Long id, @PathVariable String token) {
         Map<String, String> response = new HashMap<>();
 
-        ResponseEntity<Map<String, String>> tempMap = services.validateToken(token, "doctor");
+        ResponseEntity<Map<String, String>> tempMap = services.validateToken(token, "admin");
 
         if(!tempMap.getBody().isEmpty()) {
             return tempMap;
@@ -175,7 +175,7 @@ public class DoctorController {
     @GetMapping("/filter/{name}/{time}/{speciality}")
     public ResponseEntity<Map<String, Object>> filter(@PathVariable String name, @PathVariable String time, @PathVariable String speciality) {
         Map<String, Object> map = new HashMap<>();
-        map = services.filterDoctor(name, time, speciality);
+        map = services.filterDoctor(name, speciality, time);
         return ResponseEntity.status(HttpStatus.OK).body(map);
     }
 

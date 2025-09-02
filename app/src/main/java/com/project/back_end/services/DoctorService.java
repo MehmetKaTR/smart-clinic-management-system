@@ -168,7 +168,7 @@ public class DoctorService {
     public int deleteDoctor(Long id){
         try{
             Optional<Doctor> doctor = doctorRepository.findById(id);
-            if(doctor.isPresent())
+            if(!doctor.isPresent())
                 return -1;
 
             appointmentRepository.deleteAllByDoctorId(doctor.get().getId());
@@ -185,13 +185,14 @@ public class DoctorService {
 //    - It generates a token for the doctor if the login is successful, otherwise returns an error message.
 //    - Instruction: Make sure to handle invalid login attempts and password mismatches properly with error responses.
 
+    @Transactional
     public ResponseEntity<Map<String, String>> validateDoctor(Login login){
         Map<String, String> response = new HashMap<>();
         Doctor doctor = doctorRepository.findByEmail(login.getEmail());
 
         try{
             if(doctor == null){
-                response.put("error", "Doctor not found with email: " + login.getEmail());
+                response.put("error", "Doctor not found with email: ");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
             if(doctor.getPassword().equals(login.getPassword()) == doctor.getEmail().equals(login.getEmail())){
@@ -278,6 +279,7 @@ public class DoctorService {
 //    - It ensures that the resulting list of doctors matches both the name (case-insensitive) and the specified specialty.
 //    - Instruction: Ensure that both name and specialty are considered when filtering doctors.
 
+    @Transactional
     public Map<String, Object> filterDoctorByNameAndSpeciality(String name, String speciality){
         Map<String, Object> map = new HashMap<>();
         List<Doctor> doctors = doctorRepository.findByNameContainingIgnoreCaseAndSpecialtyIgnoreCase(name, speciality);
@@ -291,6 +293,7 @@ public class DoctorService {
 //    - Fetches doctors based on the specified specialty and filters them based on their available time slots for AM/PM.
 //    - Instruction: Ensure the time filtering is accurately applied based on the given specialty and time period (AM/PM).
 
+    @Transactional
     public Map<String, Object> filterDoctorByTimeAndSpeciality(String speciality, String amOrPm) {
         Map<String, Object> map = new HashMap<>();
         List<Doctor> doctors = doctorRepository.findBySpecialtyIgnoreCase(speciality);
@@ -305,6 +308,7 @@ public class DoctorService {
 //    - This method fetches all doctors matching the specified specialty and returns them.
 //    - Instruction: Make sure the filtering logic works for case-insensitive specialty matching.
 
+    @Transactional
     public Map<String, Object> filterDoctorBySpeciality(String speciality) {
         Map<String, Object> map = new HashMap<>();
         List<Doctor> doctors = doctorRepository.findBySpecialtyIgnoreCase(speciality);

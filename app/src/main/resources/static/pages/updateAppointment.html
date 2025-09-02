@@ -1,5 +1,4 @@
-<!-- updateAppointment.html -->
-
+<!-- adminDashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,36 +18,37 @@
 </head>
 
 <body onload="renderContent()">
-    <div class="container">
-        <div class="wrapper">
-            <div id="header"></div>
-            <div class="main-content">
-                <div class="form-container">
-                    <h2>Update <span>Appointment</span></h2>
-                    <form id="updateAppointmentForm">
-                        <label for="patientName">Patient Name</label>
-                        <input type="text" id="patientName" disabled>
+<div class="container">
+    <div class="wrapper">
+        <div id="header"></div>
+        <div class="main-content">
+            <div class="form-container">
+                <h2>Update <span>Appointment</span></h2>
+                <form id="updateAppointmentForm">
+                    <label for="patientName">Patient Name</label>
+                    <input type="text" id="patientName" disabled>
 
-                        <label for="doctorName">Doctor Name</label>
-                        <input type="text" id="doctorName" disabled>
+                    <label for="doctorName">Doctor Name</label>
+                    <input type="text" id="doctorName" disabled>
 
-                        <label for="appointmentDate">Date</label>
-                        <input type="date" id="appointmentDate" required>
+                    <label for="appointmentDate">Date</label>
+                    <input type="date" id="appointmentDate" required>
 
-                        <label for="appointmentTime">Time</label>
-                        <select id="appointmentTime" required>
-                        </select>
+                    <label for="appointmentTime">Time</label>
+                    <select id="appointmentTime" required>
+                    </select>
 
-                        <button type="submit" class="btn-primary" id="updateAppointment">Update Appointment</button>
-                        <button type="button" onclick="window.location.href='/pages/patientAppointments.html'"
-                            class="btn-secondary">Cancel</button>
-                    </form>
-                </div>
+                    <button type="submit" class="btn-primary" id="updateAppointment">Update Appointment</button>
+                    <button type="button" onclick="window.location.href='/pages/patientAppointments.html'" class="btn-secondary">Cancel</button>
+                </form>
             </div>
-            <div id="footer"></div>
         </div>
+        <div id="footer"></div>
     </div>
+</div>
 
 </body>
+
+
 
 </html>

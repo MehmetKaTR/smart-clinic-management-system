@@ -31,7 +31,7 @@ public interface AppointmentRepository  extends JpaRepository<Appointment,Long> 
 
     @Query("SELECT a FROM Appointment a " +
             "LEFT JOIN FETCH a.doctor d " +
-            "LEFT JOIN FETCH a.status av " +
+            "LEFT JOIN FETCH d.availableTimes " +
             "WHERE d.id = :doctorId " +
             "AND a.appointmentTime BETWEEN :start AND :end")
     public List<Appointment> findByDoctorIdAndAppointmentTimeBetween(Long doctorId, LocalDateTime start, LocalDateTime end);
@@ -53,6 +53,7 @@ public interface AppointmentRepository  extends JpaRepository<Appointment,Long> 
 
     @Modifying
     @Transactional
+    @Query("DELETE FROM Appointment a WHERE a.doctor.id = :doctorId")
     public void deleteAllByDoctorId(Long doctorId);
 
 //    - **deleteAllByDoctorId**:

@@ -51,7 +51,7 @@ public class Services {
         if (!tokenService.validateToken(token, user)) {
             response.put("error", "Invalid or expired token");
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
 // 4. **validateAdmin Method**
@@ -203,7 +203,7 @@ public class Services {
 // - If no filters are provided, it retrieves all appointments for the patient.
 // This flexible method supports patient-specific querying and enhances user experience on the client side.
 
-    public ResponseEntity<Map<String,Object>> filterPatient(String condition,String name,String token)
+    public ResponseEntity<Map<String,Object>> filterPatient(String condition,String name, String token)
     {
         String extractedEmail = tokenService.extractEmail(token);
         Long patientId = patientRepository.findByEmail(extractedEmail).getId();

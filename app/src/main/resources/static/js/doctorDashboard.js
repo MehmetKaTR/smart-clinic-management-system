@@ -51,35 +51,33 @@ if (datePicker) {
 // Load Appointments
 // =======================
 async function loadAppointments() {
-    if (!tableBody) return;
+
 
     try {
-        const appointments = await getAllAppointments(selectedDate, patientName, token);
+        const response = await getAllAppointments(selectedDate, patientName, token);
+        const appointments = response.appointments || [];
 
-        // Clear existing rows
-        tableBody.innerHTML = '';
+        tableBody.innerHTML = "";
 
-        if (!appointments || appointments.length === 0) {
-            const row = document.createElement('tr');
-            row.innerHTML = `<td colspan="4">No Appointments found for today.</td>`;
-            tableBody.appendChild(row);
+        if (appointments.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="5">No Appointments found for today.</td></tr>`;
             return;
         }
-
-        for (const appt of appointments) {
+        console.log(appointments)
+        appointments.forEach(appointment => {
             const patient = {
-                id: appt.patientId,
-                name: appt.patientName,
-                phone: appt.patientPhone,
-                email: appt.patientEmail
+                id: appointment.patientId,
+                name: appointment.patientName,
+                phone: appointment.patientPhone,
+                email: appointment.patientEmail,
             };
-            const row = createPatientRow(patient, appt); // assuming appt includes other info like time
+            console.log(appointment.doctorId)
+            const row = createPatientRow(patient,appointment.id,appointment.doctorId);
             tableBody.appendChild(row);
-        }
-
+        });
     } catch (error) {
         console.error("Error loading appointments:", error);
-        tableBody.innerHTML = `<tr><td colspan="4">Error loading appointments. Try again later.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="5">Error loading appointments. Try again later.</td></tr>`;
     }
 }
 

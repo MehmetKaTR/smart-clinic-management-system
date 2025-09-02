@@ -87,8 +87,6 @@ public class Doctor {
 //      - The @Pattern(regexp = "^[0-9]{10}$") annotation validates that the phone number must be exactly 10 digits long.
 
     @ElementCollection
-    @Pattern(regexp = "^([01][0-9]|2[0-3]):[0-5][0-9]-([01][0-9]|2[0-3]):[0-5][0-9]$",
-            message = "Each time slot must be in HH:mm-HH:mm format")
     private List<String> availableTimes;
 
 // 7. 'availableTimes' field:
